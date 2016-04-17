@@ -1,0 +1,28 @@
+{% extends "myapp/base.html" %}
+{% block content %}
+<h1>
+	{{ movie.name }}
+</h1>
+<p>
+	<year> Year: {{ movie.year }} </year>
+	<overview> Overview: {{ movie.overview }} </overview>
+	<director> Director: {{ movie.director }} </director> <br />
+	<actors> Actors:
+		{% for actor in movie.actors.all %}
+			<li><a href="../../actor/{{actor.id}}">
+				{{ actor.name }}</a></li>
+		{% endfor %}
+	</actors>
+	<companies> Company:
+		{% for company in movie.company.all %}
+			<li><a href="../../company/{{company.id}}">
+				{{ company.name }}</a></li>
+		{% endfor %}
+	</companies>
+	<review> Review:
+		{% for review in movie.rate.all %}
+			{{review.rating}} <br />
+			{{review.comment}} <br />
+		{% endfor %}
+</p>
+{% endblock %}

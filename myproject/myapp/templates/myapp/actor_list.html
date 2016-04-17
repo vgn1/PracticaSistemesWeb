@@ -1,0 +1,13 @@
+{% extends "myapp/base.html" %}
+{% block content %}
+<h1>
+	Actors
+</h1>
+<u1>
+	{% for actor in latest_actor_list %}
+		<li><a href="./{{actor.id}}">
+			{{ actor.name }}</a></li>
+	{% empty %}<li>Sorry, no actors registered yet.</li>
+	{% endfor %}
+</u1>
+{% endblock %}

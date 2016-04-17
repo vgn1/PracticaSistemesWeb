@@ -1,0 +1,15 @@
+{% extends "myapp/base.html" %}
+{% block content %}
+<h1>
+	{{ company.name }}
+</h1>
+<p>
+	<homePage> Home Page: {{ company.homePage }} </homePage>
+	<movies>
+		{% for movie in company.movies.all %}
+			<li><a href="{% url 'myapp:MovieDetail' movie.id 'html' %}">
+				{{ movie.name }}</a></li>
+		{% endfor %}
+	</movies>
+</p>
+{% endblock %}
