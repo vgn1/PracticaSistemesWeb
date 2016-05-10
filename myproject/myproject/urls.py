@@ -21,6 +21,6 @@ urlpatterns = [
 	url(r'^admin/', include(admin.site.urls)),
     url(r'^myapp/', include('myapp.urls', namespace='myapp')),
     #url(r'^myproject/', include('myapp.urls', namespace='myproject')),
-    #url(r'^accounts/login/$', login, name='login'),
-    #url(r'^accounts/logout/$', logout, name='logout'),
+    url(r'^accounts/login/$', login, name='login'),
+    url(r'^accounts/logout/$', logout, name='logout'),
 ]

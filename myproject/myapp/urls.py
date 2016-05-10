@@ -71,5 +71,4 @@ urlpatterns = [
 			template_name='myapp/company_detail.html'),
 		name='company_detail'),
 
-
 ]
