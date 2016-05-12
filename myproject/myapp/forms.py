@@ -8,15 +8,15 @@ class DirectorForm(ModelForm):
 
 class CompanyForm(ModelForm):
     class Meta:
-        model = Dish
+        model = Company
         exclude = ('user',)
 
 class MovieForm(ModelForm):
     class Meta:
-        model = Dish
+        model = Movie
         exclude = ('user', 'actors', 'director','company',)
 
 class ActorForm(ModelForm):
     class Meta:
-        model = Dish
+        model = Actor
         exclude = ('user',)

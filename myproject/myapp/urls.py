@@ -1,11 +1,17 @@
 from django.conf.urls import url
 from django.utils import timezone
+from django.core.urlsolvers import reverse_lazy
 from django.views.generic import DetailView, ListView, UpdateView
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
+
+from rest_framework.urlpatterns import format_suffix_patterns
+
 from models import Director, Movie, Company, Actor,\
 					MovieReview,MovieCategory, Review
+from forms import DirectorForm, CompanyForm, MovieForm, ActorForm
 from views import MovieDetail, MovieList, ActorList, ActorDetail, review,\
  					DirectorList, DirectorDetail, CompanyList, CompanyDetail
+
 
 urlpatterns = [
 

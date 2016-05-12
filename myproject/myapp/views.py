@@ -1,16 +1,65 @@
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.utils import timezone
+from django.core import serializers
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
-from django.views.generic import DetailView
-from django.views.generic import ListView
-from models import MovieReview, Movie, Actor, Company, Director, MovieCategory
+from django.utils.decorators import method_decorator
+from django.views.generic import DetailView, ListView
+from django.views.generic.base import TemplateResponseMixin
+from django.views.generic.edit import CreateView, UpdateView
 
-class MovieList(ListView):
+from rest_framework import generics, permissions
+
+from models import MovieReview, Movie, Actor, Company, Director, MovieCategory
+from forms import DirectorForm, CompanyForm, MovieForm, ActorForm
+
+class ConnegResponseMixin(TemplateResponseMixin):
+
+	def render_json_object_response(self, objects, **kwargs):
+		json_data = serializers.serialize(u"json", objects, **kwargs)
+		return HttpResponse(json_data, content_type=u"application/json")
+
+	def render_xml_object_response(self, objects, **kwargs):
+		xml_data = serializers.serialize(u"xml", objects, **kwargs)
+		return HttpResponse(xml_data, content_type=u"application/xml")
+
+	def render_to_response(self, context, **kwargs):
+		if 'extension' in self.kwargs:
+			try:
+				objects = [self.object]
+			except AttributeError:
+				objects = self.object_list
+			if self.kwargs['extension'] == 'json':
+				return self.render_json_object_response(objects=objects)
+			elif self.kwargs['extension'] == 'xml':
+				return self.render_xml_object_response(objects=objects)
+		return super(ConnegResponseMixin, self).render_to_response(context)
+
+
+class LoginRequiredMixin(object):
+	@method_decorator(login_required())
+	def dispatch(self, *args, **kwargs):
+		return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
+
+class CheckIsOwnerMixin(object):
+	def get_object(self, *args, **kwargs):
+		obj = super(CheckIsOwnerMixin, self).get_object(*args, **kwargs)
+		if not obj.user == self.request.user:
+			raise PermissionDenied
+		return obj
+
+class LoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+	template_name = 'myapp/form.html'
+
+
+class MovieList(ListView, ConnegResponseMixin):
 	model = Movie
 	template_name = 'myapp/movie_list.html'
 	context_object_name = 'latest_movie_list'
 
-class MovieDetail(DetailView):
+class MovieDetail(DetailView, ConnegResponseMixin):
 	model = Movie
 	template_name = 'myapp/movie_detail.html'
 
@@ -19,14 +68,23 @@ class MovieDetail(DetailView):
 		#context['RATING_CHOICES'] = MovieReview.RATING_CHOICES
 		return context
 
-class ActorList(ListView):
+class MovieCreate(LoginRequiredMixin, CreateView):
+	model = Movie
+	template_name = 'myapp/form.html'
+	form_class = MovieForm
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		return super(MovieCreate, self).form_valid(form)
+
+class ActorList(ListView, ConnegResponseMixin):
 	model = Actor
 	template_name = 'myapp/actor_list.html'
 	queryset=Actor.objects.all()
 	context_object_name = 'latest_actor_list'
 	latest_actor_list=queryset
 
-class ActorDetail(DetailView):
+class ActorDetail(DetailView, ConnegResponseMixin):
 	model = Actor
 	template_name = 'myapp/actor_detail.html'
 	def get_context_data(self, **kwargs):
@@ -34,23 +92,56 @@ class ActorDetail(DetailView):
 		#context['RATING_CHOICES'] = MovieReview.RATING_CHOICES
 		return context
 
-class CompanyList(ListView):
+
+class ActorCreate(LoginRequiredMixin, CreateView):
+	model = Actor
+	template_name = 'myapp/form.html'
+	form_class = ActorForm
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
+		return super(ActorCreate, self).form_valid(form)
+
+class CompanyList(ListView, ConnegResponseMixin):
 	model = Company
 	template_name = 'myapp/company_list.html'
 	context_object_name = 'latest_company_list'
 
-class CompanyDetail(DetailView):
+class CompanyDetail(DetailView, ConnegResponseMixin):
 	model = Company
 	template_name = 'myapp/company_detail.html'
 
-class DirectorList(ListView):
+
+class CompanyCreate(LoginRequiredMixin, CreateView):
+	model = Company
+	template_name = 'myapp/form.html'
+	form_class = CompanyForm
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
+		return super(CompanyCreate, self).form_valid(form)
+
+class DirectorList(ListView, ConnegResponseMixin):
 	model = Director
 	template_name = 'myapp/director_list.html'
 	context_object_name = 'latest_director_list'
 
-class DirectorDetail(DetailView):
+class DirectorDetail(DetailView, ConnegResponseMixin):
 	model = Director
 	template_name = 'myapp/director_detail.html'
+
+
+class DirectorCreate(LoginRequiredMixin, CreateView):
+	model = Director
+	template_name = 'myapp/form.html'
+	form_class = Director
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
+		return super(ActorCreate, self).form_valid(form)
 
 def category(request, pk):
 	movie = get_object_or_404(Movie, pk=pk)
@@ -62,6 +153,7 @@ def category(request, pk):
 	return HttpResponseRedirect(reverse('myapp:movie_detail',
 		args=(movie.id,ea)))
 
+@login_required()
 def review(request, pk):
 	movie = get_object_or_404(Movie, pk=pk)
 	review = MovieReview(
@@ -72,3 +164,88 @@ def review(request, pk):
 	review.save()
 	return HttpResponseRedirect(reverse('myapp:movie_detail',
 		args=(movie.id,ea)))
+
+### RESTful API views ###
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+
+	def has_object_permission(self, request, view, obj):
+		# Read permissions are allowed to any request,
+		# so we'll always allow GET, HEAD or OPTIONS requests.
+		if request.method in permissions.SAFE_METHODS:
+			return True
+		# Instance must have an attribute named `owner`.
+		return obj.user == request.user
+
+class APIMovieList(generics.ListCreateAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = Movie
+	queryset = Movie.objects.all()
+	serializer_class = MovieSerializer
+
+class APIMovieDetail(generics.RetrieveUpdateDestroyAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = Movie
+	queryset = Movie.objects.all()
+	serializer_class = MovieSerializer
+
+class APIDirectorList(generics.ListCreateAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = Director
+	queryset = Movie.objects.all()
+	serializer_class = DirectorSerializer
+
+class APIDirectorDetail(generics.RetrieveUpdateDestroyAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = Director
+	queryset = Director.objects.all()
+	serializer_class = DirectorSerializer
+
+class APIActorList(generics.ListCreateAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = Actor
+	queryset = Actor.objects.all()
+	serializer_class = ActorSerializer
+
+class APIActorDetail(generics.RetrieveUpdateDestroyAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = Actor
+	queryset = Actor.objects.all()
+	serializer_class = ActorSerializer
+
+class APICompanyList(generics.ListCreateAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = Company
+	queryset = Company.objects.all()
+	serializer_class = CompanySerializer
+
+class APICompanyDetail(generics.RetrieveUpdateDestroyAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = Company
+	queryset = Company.objects.all()
+	serializer_class = CompanySerializer
+
+class APIMovieReviewList(generics.ListCreateAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = MovieReview
+	queryset = MovieReview.objects.all()
+	serializer_class = MovieReviewSerializer
+
+class APIMovieReviewDetail(generics.RetrieveUpdateDestroyAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = MovieReview
+	serializer_class = MovieReviewSerializer
+
+class APIMovieCategoryList(generics.ListCreateAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = MovieCategory
+	queryset = MovieCategory.objects.all()
+	serializer_class = MovieCategorySerializer
+
+class APIMovieCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+	permission_classes = (IsOwnerOrReadOnly,)
+	model = MovieCategory
+	queryset = MovieCategory.objects.all()
+	serializer_class = MovieCategorySerializer
+
+
