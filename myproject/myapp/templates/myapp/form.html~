@@ -10,10 +10,10 @@
 			source: categories
 			});
 		});
-			$("#id_movie").autocomplete({
+			$("#id_city").autocomplete({
 				source: function( request, response ) {
 				$.ajax({
-					url: "http://api.themoviedb.org/3/search/movie",
+					url: "http://ws.geonames.org/searchJSON",
 						dataType: "jsonp",
 						data: {
 							featureClass: "P",
@@ -24,28 +24,15 @@
 						success: function( data ) {
 							response( $.map( data.geonames, function( item ) {
 								return {
-									poster_path: item.name
-									adult: item.name
-									overview: item.name
-									release_date: item.name
-									genre_ids: item.adminName1, item.adminName2, item.adminName3
-									id: item.name
-									original_title: item.name
-									original_languge: item.name
-									language: item.name
-									title: item.name
-									backdrop_path: item.name
-									popularity: item.name
-									vote_count: item.name
-									video: item.name
-									vote_average: item.name
-
+									label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
+									value: item.name,
+									stateOrProvince: item.adminName1,
+									countryName: item.countryName
 								}
 							}));
 						}
 					});
 				},
-				/* omplir amb la info adient  */
 				minLength: 2,
 				select: function( event, ui ) {
 					if (ui.item) {
