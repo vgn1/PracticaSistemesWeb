@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.utils import timezone
-from django.core.urlsolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic import DetailView, ListView, UpdateView
 from django.views.generic.base import TemplateView, RedirectView
 
@@ -34,6 +34,17 @@ urlpatterns = [
 			template_name='myapp/movie_detail.html'),
 		name='movie_detail'),
 
+	#Create Movie
+	url(r'^movie/create/$',
+        MovieCreate.as_view(),
+        name='movie_create'),
+
+	#Edit Movie
+	url(r'^movie/(?P<pk>\d+)/edit/$',
+    	LoginRequiredCheckIsOwnerUpdateView.as_view(
+        	model=Movie,
+            form_class=MovieForm),
+        name='movie_edit'),
 
 	#Actor list
 	url(r'^actor/$',
@@ -49,6 +60,18 @@ urlpatterns = [
 			template_name='myapp/actor_detail.html'),
 		name='actor_detail'),
 
+	#Create Actor
+	url(r'^actor/create/$',
+        ActorCreate.as_view(),
+        name='actor_create'),
+
+	#Edit Actor
+	url(r'^actor/(?P<pk>\d+)/edit/$',
+    	LoginRequiredCheckIsOwnerUpdateView.as_view(
+        	model=Actor,
+            form_class=ActorForm),
+        name='actor_edit'),
+
 	#Director list
 	url(r'^director/$',
 		DirectorList.as_view(
@@ -62,6 +85,17 @@ urlpatterns = [
 			model=Director,
 			template_name='myapp/director_detail.html'),
 		name='director_detail'),
+	#Create Director
+	url(r'^director/create/$',
+        DirectorCreate.as_view(),
+        name='director_create'),
+
+	#Edit Director
+	url(r'^director/(?P<pk>\d+)/edit/$',
+    	LoginRequiredCheckIsOwnerUpdateView.as_view(
+        	model=Director,
+            form_class=DirectorForm),
+        name='director_edit'),
 
 	#Company list
 	url(r'^company/$',
@@ -77,4 +111,48 @@ urlpatterns = [
 			template_name='myapp/company_detail.html'),
 		name='company_detail'),
 
+	#Create Company
+	url(r'^company/create/$',
+        CompanyCreate.as_view(),
+        name='company_create'),
+
+	#Edit Company
+	url(r'^company/(?P<pk>\d+)/edit/$',
+    	LoginRequiredCheckIsOwnerUpdateView.as_view(
+        	model=Company,
+            form_class=CompanyForm),
+        name='company_edit'),
+
+
+    # RESTful API
+
+    url(r'^api/auth/',
+        include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/movie/$',
+        APIMovieList.as_view(), name='movie-list'),
+    url(r'^api/movie/(?P<pk>\d+)/$',
+        APIMovieDetail.as_view(), name='movie-detail'),
+    url(r'^api/director/$',
+        APIDirectorList.as_view(), name='director-list'),
+    url(r'^api/director/(?P<pk>\d+)/$',
+        APIDirectorDetail.as_view(), name='director-detail'),
+    url(r'^api/actor/$',
+        APIActorList.as_view(), name='actor-list'),
+    url(r'^api/actor/(?P<pk>\d+)/$',
+        APIActorDetail.as_view(), name='actor-detail'),
+	url(r'^api/company/$',
+        APICompanyList.as_view(), name='company-list'),
+    url(r'^api/company/(?P<pk>\d+)/$',
+        APICompanyDetail.as_view(), name='company-detail'),
+	url(r'^api/moviereview/$',
+        APIMovieReviewList.as_view(), name='moviereview-list'),
+    url(r'^api/moviereview/(?P<pk>\d+)/$',
+        APIMovieReviewDetail.as_view(), name='moviereview-detail'),
+	url(r'^api/moviecategory/$',
+        APIMovieCategoryList.as_view(), name='moviecategory-list'),
+    url(r'^api/moviecategory/(?P<pk>\d+)/$',
+        APIMovieCategoryDetail.as_view(), name='moviecategory-detail'),
 ]
+
+# Format suffixes
+urlpatterns = format_suffix_patterns(urlpatterns, allowed=['api','json', 'xml'])
