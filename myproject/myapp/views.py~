@@ -15,7 +15,9 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from models import MovieReview, Movie, Actor, Company, Director, MovieCategory
 from forms import DirectorForm, CompanyForm, MovieForm, ActorForm
-#from serializers import RestaurantSerializer, DishSerializer, RestaurantReviewSerializer
+#from serializers import DirectorSerializer, CompanySerializer, MovieReviewSerializer, MovieCompanySerializer, MovieSerializer, ActorSerializer,
+
+
 
 
 class ConnegResponseMixin(TemplateResponseMixin):
