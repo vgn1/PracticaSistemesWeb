@@ -9,8 +9,12 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from models import Director, Movie, Company, Actor,\
 					MovieReview,MovieCategory, Review
 from forms import DirectorForm, CompanyForm, MovieForm, ActorForm
-from views import MovieDetail, MovieList, ActorList, ActorDetail, review,\
- 					DirectorList, DirectorDetail, CompanyList, CompanyDetail
+from views import MovieDetail, MovieList, MovieCreate, ActorList, ActorDetail, ActorCreate, review,\
+					DirectorList, DirectorDetail, DirectorCreate, CompanyList, CompanyDetail, CompanyCreate,\
+					LoginRequiredCheckIsOwnerUpdateView, APIMovieList, APIMovieDetail, APIDirectorList,\
+					APIDirectorDetail, APIActorList, APIActorDetail, APICompanyList, APICompanyDetail,\
+					APIMovieReviewList, APIMovieReviewDetail, APIMovieCategoryList, APIMovieCategoryDetail 
+
 
 
 urlpatterns = [
@@ -126,8 +130,8 @@ urlpatterns = [
 
     # RESTful API
 
-    url(r'^api/auth/',
-        include('rest_framework.urls', namespace='rest_framework')),
+    #url(r'^api/auth/',
+     #   include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/movie/$',
         APIMovieList.as_view(), name='movie-list'),
     url(r'^api/movie/(?P<pk>\d+)/$',

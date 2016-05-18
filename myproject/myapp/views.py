@@ -15,7 +15,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from models import MovieReview, Movie, Actor, Company, Director, MovieCategory
 from forms import DirectorForm, CompanyForm, MovieForm, ActorForm
-#from serializers import DirectorSerializer, CompanySerializer, MovieReviewSerializer, MovieCompanySerializer, MovieSerializer, ActorSerializer,
+from serializer import DirectorSerializer, CompanySerializer, MovieReviewSerializer 
+from serializer import MovieCategorySerializer, MovieSerializer, ActorSerializer
 
 
 
@@ -197,7 +198,7 @@ class APIMovieDetail(generics.RetrieveUpdateDestroyAPIView):
 class APIDirectorList(generics.ListCreateAPIView):
 	permission_classes = (IsOwnerOrReadOnly,)
 	model = Director
-	queryset = Movie.objects.all()
+	queryset = Director.objects.all()
 	serializer_class = DirectorSerializer
 
 class APIDirectorDetail(generics.RetrieveUpdateDestroyAPIView):
