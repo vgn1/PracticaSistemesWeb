@@ -1,0 +1,14 @@
+{% extends "myapp/base.html" %}
+{% block content %}
+<script>
+function backwards() {
+    window.history.back();
+}
+</script>
+
+<form action="" method="post">{% csrf_token %}
+    <p>Are you sure you want to remove "{{ object }}"?</p>
+    <input type="submit" value="Confirm" />
+    <button onclick="backwards()" type="button"> <b> Cancel </b> </button>
+</form>
+{% endblock %}

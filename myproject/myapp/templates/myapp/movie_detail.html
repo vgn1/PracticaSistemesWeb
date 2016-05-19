@@ -4,8 +4,8 @@
 	{{ movie.name }}
 </h1>
 <p>
-	<year> Year: {{ movie.year }} </year>
-	<overview> Overview: {{ movie.overview }} </overview>
+	<year> Year: {{ movie.year }} </year> <br />
+	<overview> Overview: {{ movie.overview }} </overview> <br />
 	<director> Director: {{ movie.director }} </director> <br />
 	<actors> Actors:
 		{% for actor in movie.actors.all %}
@@ -19,10 +19,17 @@
 				{{ company.name }}</a></li>
 		{% endfor %}
 	</companies>
+	<category> Category:
+		{% for category in movie.rate.all %}
+			{{category.category}}
+		{% endfor %}
+	</category> <br />
 	<review> Review:
 		{% for review in movie.rate.all %}
 			{{review.rating}} <br />
 			{{review.comment}} <br />
 		{% endfor %}
+	</review>
+
 </p>
 {% endblock %}

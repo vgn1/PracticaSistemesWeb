@@ -14,7 +14,7 @@ class CompanyForm(ModelForm):
 class MovieForm(ModelForm):
     class Meta:
         model = Movie
-        exclude = ('user', 'actors', 'director','company',)
+        exclude = ('user',)
 
 class ActorForm(ModelForm):
     class Meta:

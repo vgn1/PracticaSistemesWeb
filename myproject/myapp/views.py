@@ -15,8 +15,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from models import MovieReview, Movie, Actor, Company, Director, MovieCategory
 from forms import DirectorForm, CompanyForm, MovieForm, ActorForm
-from serializer import DirectorSerializer, CompanySerializer, MovieReviewSerializer 
-from serializer import MovieCategorySerializer, MovieSerializer, ActorSerializer
+from serializers import DirectorSerializer, CompanySerializer, MovieReviewSerializer 
+from serializers import MovieCategorySerializer, MovieSerializer, ActorSerializer
 
 
 
@@ -83,6 +83,15 @@ class MovieCreate(LoginRequiredMixin, CreateView):
 		form.instance.user = self.request.user
 		return super(MovieCreate, self).form_valid(form)
 
+#class MovieEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+#	template_name = 'myapp/movie_form.html'
+
+#class MovieDelete(DeleteView):
+#	model = Movie
+#	template_name = 'myapp/delete_form.html'
+#	success_url = '/myapp/movies.html'
+#	success_message = 'Movie Removed.'
+
 class ActorList(ListView, ConnegResponseMixin):
 	model = Actor
 	template_name = 'myapp/actor_list.html'
@@ -109,6 +118,15 @@ class ActorCreate(LoginRequiredMixin, CreateView):
 		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
 		return super(ActorCreate, self).form_valid(form)
 
+#class ActorEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+#	template_name = 'myapp/actor_form.html'
+
+#class ActorDelete(DeleteView):
+#	model = Actor
+#	template_name = 'myapp/delete_form.html'
+#	success_url = '/myapp/actors.html'
+#	success_message = 'Actor Removed.'
+
 class CompanyList(ListView, ConnegResponseMixin):
 	model = Company
 	template_name = 'myapp/company_list.html'
@@ -129,6 +147,15 @@ class CompanyCreate(LoginRequiredMixin, CreateView):
 		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
 		return super(CompanyCreate, self).form_valid(form)
 
+#class CompanyEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+#	template_name = 'myapp/company_form.html'
+
+#class CompanyDelete(DeleteView):
+#	model = Company
+#	template_name = 'myapp/delete_form.html'
+#	success_url = '/myapp/companies.html'
+#	success_message = 'Company Removed.'
+
 class DirectorList(ListView, ConnegResponseMixin):
 	model = Director
 	template_name = 'myapp/director_list.html'
@@ -148,6 +175,15 @@ class DirectorCreate(LoginRequiredMixin, CreateView):
 		form.instance.user = self.request.user
 		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
 		return super(ActorCreate, self).form_valid(form)
+
+#class DirectorEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+#	template_name = 'myapp/director_form.html'
+
+#class DirectorDelete(DeleteView):
+#	model = Director
+#	template_name = 'myapp/delete_form.html'
+#	success_url = '/myapp/director.html'
+#	success_message = 'Director Removed.'
 
 def category(request, pk):
 	movie = get_object_or_404(Movie, pk=pk)

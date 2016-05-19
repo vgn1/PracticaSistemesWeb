@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, patterns, include
 from django.utils import timezone
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import DetailView, ListView, UpdateView
@@ -25,14 +25,14 @@ urlpatterns = [
         name="Principal"),
 
 	#Movies list
-	url(r'^movie/$',
+	url(r'^movie\.(?P<extension>(json|xml|html))?$',
 		MovieList.as_view(
 			context_object_name='latest_movie_list',
 			template_name='myapp/movie_list.html'),
 		name='movie_list'),
 
 	#Movies detail
-	url(r'^movie/(?P<pk>\d+)/$',
+	url(r'^movie/(?P<pk>\d+)\.(?P<extension>(json|xml|html))?$',
 		MovieDetail.as_view(
 			model=Movie,
 			template_name='myapp/movie_detail.html'),
@@ -51,14 +51,14 @@ urlpatterns = [
         name='movie_edit'),
 
 	#Actor list
-	url(r'^actor/$',
+	url(r'^actor\.(?P<extension>(json|xml|html))?$',
 		ActorList.as_view(
 			context_object_name='latest_actor_list',
 			template_name='myapp/actor_list.html'),
 		name='actor_list'),
 
 	#Actor detail
-	url(r'^actor/(?P<pk>\d+)/$',
+	url(r'^actor/(?P<pk>\d+)\.(?P<extension>(json|xml|html))?$',
 		ActorDetail.as_view(
 			model=Actor,
 			template_name='myapp/actor_detail.html'),
@@ -77,18 +77,19 @@ urlpatterns = [
         name='actor_edit'),
 
 	#Director list
-	url(r'^director/$',
+	url(r'^director\.(?P<extension>(json|xml|html))?$',
 		DirectorList.as_view(
 			context_object_name='latest_director_list',
 			template_name='myapp/director_list.html'),
 		name='director_list'),
 
 	#Director detail
-	url(r'^director/(?P<pk>\d+)/$',
+	url(r'^director/(?P<pk>\d+)\.(?P<extension>(json|xml|html))?$',
 		DirectorDetail.as_view(
 			model=Director,
 			template_name='myapp/director_detail.html'),
 		name='director_detail'),
+
 	#Create Director
 	url(r'^director/create/$',
         DirectorCreate.as_view(),
@@ -102,14 +103,14 @@ urlpatterns = [
         name='director_edit'),
 
 	#Company list
-	url(r'^company/$',
+	url(r'^company/\.(?P<extension>(json|xml|html))?$',
 		CompanyList.as_view(
 			context_object_name='latest_company_list',
 			template_name='myapp/company_list.html'),
 		name='company_list'),
 
 	#Company detail
-	url(r'^company/(?P<pk>\d+)/$',
+	url(r'^company/(?P<pk>\d+)\.(?P<extension>(json|xml|html))?$',
 		CompanyDetail.as_view(
 			model=Company,
 			template_name='myapp/company_detail.html'),
@@ -127,11 +128,15 @@ urlpatterns = [
             form_class=CompanyForm),
         name='company_edit'),
 
+	url(r'movie/(?P<pk>\d+)/review/create/$',
+		review,
+		name='review_create'),
+
+
 
     # RESTful API
 
-    #url(r'^api/auth/',
-     #   include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/movie/$',
         APIMovieList.as_view(), name='movie-list'),
     url(r'^api/movie/(?P<pk>\d+)/$',
