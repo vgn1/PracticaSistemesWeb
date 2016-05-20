@@ -1,0 +1,26 @@
+{% extends "myapp/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+	<script>
+	$(function() {
+			$.getJSON("{% static "directors.json" %}", {}, function (directors) {
+			$("#id_name").autocomplete({
+			source: directors
+			});
+		});	
+    });
+    
+</script>
+
+
+    <form method="post" action="">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit"/>
+    </form>
+
+{% endblock %}

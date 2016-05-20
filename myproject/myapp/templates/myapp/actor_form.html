@@ -1,0 +1,55 @@
+{% extends "myapp/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+	<script>
+	$(function() {
+				
+        $("#id_name").autocomplete({
+            source: function( request, response ) {
+                $.ajax({
+                    url: "http://api.themoviedb.org/3/search/person",
+                    //dataType: "jsonp",
+                    data: {
+                        //featureClass: "P",
+                        //maxRows: 10,
+                        api_key: "fa860240282d5fa0995095476d840b1b",
+                        query: request.term,
+                        page: 1,
+                        include_adult: false,
+                        //username: "demo"
+                    },
+                    success: function( data ) {
+                        response( $.map( data.results, function( item ) {
+                            return {
+                                label: item.name,
+                                value: item.name,
+                                name: item.name,
+                               
+                            }
+                        }));
+                    }
+                });
+            },
+            minLength: 2,
+            select: function( event, ui ) {
+                if (ui.item) {
+                    $("#id_name").val(ui.item.name);
+                }
+            }
+        });
+    });
+    
+</script>
+
+
+    <form method="post" action="">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit"/>
+    </form>
+
+{% endblock %}

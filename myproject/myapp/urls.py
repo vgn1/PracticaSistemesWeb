@@ -159,26 +159,32 @@ urlpatterns = [
     # RESTful API
 
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
+   
     url(r'^api/movie/$',
         APIMovieList.as_view(), name='movie-list'),
     url(r'^api/movie/(?P<pk>\d+)/$',
         APIMovieDetail.as_view(), name='movie-detail'),
+
     url(r'^api/director/$',
         APIDirectorList.as_view(), name='director-list'),
     url(r'^api/director/(?P<pk>\d+)/$',
         APIDirectorDetail.as_view(), name='director-detail'),
+
     url(r'^api/actor/$',
         APIActorList.as_view(), name='actor-list'),
     url(r'^api/actor/(?P<pk>\d+)/$',
         APIActorDetail.as_view(), name='actor-detail'),
+
 	url(r'^api/company/$',
         APICompanyList.as_view(), name='company-list'),
     url(r'^api/company/(?P<pk>\d+)/$',
         APICompanyDetail.as_view(), name='company-detail'),
+
 	url(r'^api/moviereview/$',
         APIMovieReviewList.as_view(), name='moviereview-list'),
     url(r'^api/moviereview/(?P<pk>\d+)/$',
         APIMovieReviewDetail.as_view(), name='moviereview-detail'),
+
 	url(r'^api/moviecategory/$',
         APIMovieCategoryList.as_view(), name='moviecategory-list'),
     url(r'^api/moviecategory/(?P<pk>\d+)/$',

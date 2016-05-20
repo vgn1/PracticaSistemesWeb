@@ -76,7 +76,7 @@ class MovieDetail(DetailView, ConnegResponseMixin):
 
 class MovieCreate(LoginRequiredMixin, CreateView):
 	model = Movie
-	template_name = 'myapp/form.html'
+	template_name = 'myapp/movie_form.html'
 	success_url = '../'
 	form_class = MovieForm
 
@@ -87,7 +87,7 @@ class MovieCreate(LoginRequiredMixin, CreateView):
 class MovieEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
 	model=Movie
 	form_class=MovieForm
-	template_name = 'myapp/form.html'
+	template_name = 'myapp/movie_form.html'
 	success_url = '../../'
 	
 
@@ -115,7 +115,7 @@ class ActorDetail(DetailView, ConnegResponseMixin):
 
 class ActorCreate(LoginRequiredMixin, CreateView):
 	model = Actor
-	template_name = 'myapp/form.html'
+	template_name = 'myapp/actor_form.html'
 	form_class = ActorForm
 	success_url = '../'
 
@@ -127,7 +127,7 @@ class ActorCreate(LoginRequiredMixin, CreateView):
 class ActorEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
 	model=Actor
 	form_class=ActorForm
-	template_name = 'myapp/form.html'
+	template_name = 'myapp/actor_form.html'
 	success_url = '../../'
 
 class ActorDelete(DeleteView):
@@ -148,7 +148,7 @@ class CompanyDetail(DetailView, ConnegResponseMixin):
 
 class CompanyCreate(LoginRequiredMixin, CreateView):
 	model = Company
-	template_name = 'myapp/form.html'
+	template_name = 'myapp/company_form.html'
 	form_class = CompanyForm
 	success_url = '../'
 
@@ -160,7 +160,7 @@ class CompanyCreate(LoginRequiredMixin, CreateView):
 class CompanyEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
 	model=Company
 	form_class=CompanyForm
-	template_name = 'myapp/form.html'
+	template_name = 'myapp/company_form.html'
 	success_url = '../../'
 
 class CompanyDelete(DeleteView):
@@ -179,8 +179,8 @@ class DirectorDetail(DetailView, ConnegResponseMixin):
 
 class DirectorCreate(LoginRequiredMixin, CreateView):
 	model = Director
-	template_name = 'myapp/form.html'
-	form_class = Director
+	template_name = 'myapp/director_form.html'
+	form_class = DirectorForm
 	success_url = '../'
 
 	def form_valid(self, form):
@@ -191,7 +191,7 @@ class DirectorCreate(LoginRequiredMixin, CreateView):
 class DirectorEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
 	model=Director
 	form_class=DirectorForm
-	template_name = 'myapp/form.html'
+	template_name = 'myapp/director_form.html'
 	success_url = '../../'
 
 class DirectorDelete(DeleteView):
@@ -254,7 +254,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 		return obj.user == request.user
 
 class APIMovieList(generics.ListCreateAPIView):
-	permission_classes = (IsOwnerOrReadOnly,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 	model = Movie
 	queryset = Movie.objects.all()
 	serializer_class = MovieSerializer
@@ -266,7 +266,7 @@ class APIMovieDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = MovieSerializer
 
 class APIDirectorList(generics.ListCreateAPIView):
-	permission_classes = (IsOwnerOrReadOnly,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 	model = Director
 	queryset = Director.objects.all()
 	serializer_class = DirectorSerializer
@@ -278,7 +278,7 @@ class APIDirectorDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = DirectorSerializer
 
 class APIActorList(generics.ListCreateAPIView):
-	permission_classes = (IsOwnerOrReadOnly,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 	model = Actor
 	queryset = Actor.objects.all()
 	serializer_class = ActorSerializer
@@ -290,7 +290,7 @@ class APIActorDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = ActorSerializer
 
 class APICompanyList(generics.ListCreateAPIView):
-	permission_classes = (IsOwnerOrReadOnly,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 	model = Company
 	queryset = Company.objects.all()
 	serializer_class = CompanySerializer
@@ -302,7 +302,7 @@ class APICompanyDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = CompanySerializer
 
 class APIMovieReviewList(generics.ListCreateAPIView):
-	permission_classes = (IsOwnerOrReadOnly,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 	model = MovieReview
 	queryset = MovieReview.objects.all()
 	serializer_class = MovieReviewSerializer
@@ -313,7 +313,7 @@ class APIMovieReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = MovieReviewSerializer
 
 class APIMovieCategoryList(generics.ListCreateAPIView):
-	permission_classes = (IsOwnerOrReadOnly,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 	model = MovieCategory
 	queryset = MovieCategory.objects.all()
 	serializer_class = MovieCategorySerializer

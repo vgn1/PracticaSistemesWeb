@@ -5,18 +5,19 @@ from models import MovieReview, Movie, Actor, Company, Director, MovieCategory
 
 class MovieSerializer(HyperlinkedModelSerializer):
     uri = HyperlinkedIdentityField(view_name='myapp:movie-detail')
-    director = HyperlinkedRelatedField(many=False, read_only=True, view_name='myapp:director-detail')
+    director = HyperlinkedRelatedField(many=True, read_only=True, view_name='myapp:director-detail')
     actors = HyperlinkedRelatedField(many=True, read_only=True, view_name='myapp:actor-detail')
-    company = HyperlinkedRelatedField(many=False, read_only=True, view_name='myapp:company-detail')
+    company = HyperlinkedRelatedField(many=True, read_only=True, view_name='myapp:company-detail')
     user = CharField(read_only=True)
 
     class Meta:        
-	model = Movie
+        model = Movie
         fields = ('uri', 'name', 'year', 'overview', 'user', 'director', 'actors', 'company')
 
 
 class ActorSerializer(HyperlinkedModelSerializer):
     uri = HyperlinkedIdentityField(view_name='myapp:actor-detail')
+    movies = HyperlinkedRelatedField(many=True, view_name='myapp:actor-detail', read_only=True)
 
     class Meta:
         model = Actor
@@ -42,7 +43,7 @@ class MovieReviewSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = MovieReview
-        fields = ('uri','rating', 'comment', 'movies')
+        fields = ('uri','rating', 'comment', 'user','movies')
 
 class MovieCategorySerializer(HyperlinkedModelSerializer):
     uri = HyperlinkedIdentityField(view_name='myapp:moviecategory-detail')
@@ -50,6 +51,6 @@ class MovieCategorySerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = MovieCategory
-        fields = ('uri', 'movie')
+        fields = ('uri', 'category', 'user','movie')
 
 
