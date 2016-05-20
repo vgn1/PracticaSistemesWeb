@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import TemplateResponseMixin
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -71,12 +71,13 @@ class MovieDetail(DetailView, ConnegResponseMixin):
 
 	def get_context_data(self, **kwargs):
 		context = super(MovieDetail, self).get_context_data(**kwargs)
-		#context['RATING_CHOICES'] = MovieReview.RATING_CHOICES
+		context['RATING_CHOICES'] = MovieReview.RATING_CHOICES
 		return context
 
 class MovieCreate(LoginRequiredMixin, CreateView):
 	model = Movie
 	template_name = 'myapp/form.html'
+	success_url = 'myapp/movie'
 	form_class = MovieForm
 
 	def form_valid(self, form):
@@ -86,11 +87,11 @@ class MovieCreate(LoginRequiredMixin, CreateView):
 #class MovieEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
 #	template_name = 'myapp/movie_form.html'
 
-#class MovieDelete(DeleteView):
-#	model = Movie
-#	template_name = 'myapp/delete_form.html'
-#	success_url = '/myapp/movies.html'
-#	success_message = 'Movie Removed.'
+class MovieDelete(DeleteView):
+	model = Movie
+	template_name = 'myapp/delete_form.html'
+	success_url = '../../../'
+	success_message = 'Movie Removed.'
 
 class ActorList(ListView, ConnegResponseMixin):
 	model = Actor
@@ -174,8 +175,17 @@ class DirectorCreate(LoginRequiredMixin, CreateView):
 	def form_valid(self, form):
 		form.instance.user = self.request.user
 		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
-		return super(ActorCreate, self).form_valid(form)
+		return super(DirectorCreate, self).form_valid(form)
 
+"""class MovieReviewCreate(LoginRequiredMixin, CreateView):
+	model = MovieReview
+	template_name = 'myapp/form.html'
+	form_class = MovieReview
+	
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
+		return super(MovieReviewCreate, self).form_valid(form)"""
 #class DirectorEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
 #	template_name = 'myapp/director_form.html'
 
@@ -188,24 +198,25 @@ class DirectorCreate(LoginRequiredMixin, CreateView):
 def category(request, pk):
 	movie = get_object_or_404(Movie, pk=pk)
 	category = MovieCategory(
-		rating=request.POST['rating'],
+		rating=request.POST.get('rating'),
 		user=request.user,
 		movie=movie)
 	category.save()
 	return HttpResponseRedirect(reverse('myapp:movie_detail',
-		args=(movie.id,ea)))
+		args=(movie.id,)))
 
 @login_required()
 def review(request, pk):
 	movie = get_object_or_404(Movie, pk=pk)
+
 	review = MovieReview(
-		rating=request.POST['rating'],
-		comment=request.POST['comment'],
+		rating=request.POST.get('rating'),
+		comment=request.POST.get('comment'),
 		user=request.user,
-		movie=movie)
+		movies=movie)
 	review.save()
-	return HttpResponseRedirect(reverse('myapp:movie_detail',
-		args=(movie.id,ea)))
+	#return HttpResponseRedirect("../../../"+str(movie.id)+"/")
+	return HttpResponseRedirect(reverse('myapp:movie_detail', args=(movie.id,)))
 
 ### RESTful API views ###
 

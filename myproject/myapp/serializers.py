@@ -42,7 +42,7 @@ class MovieReviewSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = MovieReview
-        fields = ('uri', 'movies')
+        fields = ('uri','rating', 'comment', 'movies')
 
 class MovieCategorySerializer(HyperlinkedModelSerializer):
     uri = HyperlinkedIdentityField(view_name='myapp:moviecategory-detail')

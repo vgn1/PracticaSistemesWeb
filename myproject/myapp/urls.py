@@ -9,7 +9,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from models import Director, Movie, Company, Actor,\
 					MovieReview,MovieCategory, Review
 from forms import DirectorForm, CompanyForm, MovieForm, ActorForm
-from views import MovieDetail, MovieList, MovieCreate, ActorList, ActorDetail, ActorCreate, review,\
+from views import MovieDetail, MovieList, MovieCreate, MovieDelete, ActorList, ActorDetail, ActorCreate, review,\
 					DirectorList, DirectorDetail, DirectorCreate, CompanyList, CompanyDetail, CompanyCreate,\
 					LoginRequiredCheckIsOwnerUpdateView, APIMovieList, APIMovieDetail, APIDirectorList,\
 					APIDirectorDetail, APIActorList, APIActorDetail, APICompanyList, APICompanyDetail,\
@@ -25,14 +25,14 @@ urlpatterns = [
         name="Principal"),
 
 	#Movies list
-	url(r'^movie\.(?P<extension>(json|xml|html))?$',
+	url(r'^movie/$',
 		MovieList.as_view(
 			context_object_name='latest_movie_list',
 			template_name='myapp/movie_list.html'),
 		name='movie_list'),
 
 	#Movies detail
-	url(r'^movie/(?P<pk>\d+)\.(?P<extension>(json|xml|html))?$',
+	url(r'^movie/(?P<pk>\d+)/$',
 		MovieDetail.as_view(
 			model=Movie,
 			template_name='myapp/movie_detail.html'),
@@ -50,15 +50,21 @@ urlpatterns = [
             form_class=MovieForm),
         name='movie_edit'),
 
+	#Delete Movie
+	url(r'^movie/(?P<pk>\d+)/delete/$',
+		MovieDelete.as_view(),
+		name='movie_delete'),
+
+
 	#Actor list
-	url(r'^actor\.(?P<extension>(json|xml|html))?$',
+	url(r'^actor/$',
 		ActorList.as_view(
 			context_object_name='latest_actor_list',
 			template_name='myapp/actor_list.html'),
 		name='actor_list'),
 
 	#Actor detail
-	url(r'^actor/(?P<pk>\d+)\.(?P<extension>(json|xml|html))?$',
+	url(r'^actor/(?P<pk>\d+)/$',
 		ActorDetail.as_view(
 			model=Actor,
 			template_name='myapp/actor_detail.html'),
@@ -77,14 +83,14 @@ urlpatterns = [
         name='actor_edit'),
 
 	#Director list
-	url(r'^director\.(?P<extension>(json|xml|html))?$',
+	url(r'^director/$',
 		DirectorList.as_view(
 			context_object_name='latest_director_list',
 			template_name='myapp/director_list.html'),
 		name='director_list'),
 
 	#Director detail
-	url(r'^director/(?P<pk>\d+)\.(?P<extension>(json|xml|html))?$',
+	url(r'^director/(?P<pk>\d+)/$',
 		DirectorDetail.as_view(
 			model=Director,
 			template_name='myapp/director_detail.html'),
@@ -103,14 +109,14 @@ urlpatterns = [
         name='director_edit'),
 
 	#Company list
-	url(r'^company/\.(?P<extension>(json|xml|html))?$',
+	url(r'^company/$',
 		CompanyList.as_view(
 			context_object_name='latest_company_list',
 			template_name='myapp/company_list.html'),
 		name='company_list'),
 
 	#Company detail
-	url(r'^company/(?P<pk>\d+)\.(?P<extension>(json|xml|html))?$',
+	url(r'^company/(?P<pk>\d+)/$',
 		CompanyDetail.as_view(
 			model=Company,
 			template_name='myapp/company_detail.html'),
@@ -128,6 +134,7 @@ urlpatterns = [
             form_class=CompanyForm),
         name='company_edit'),
 
+	#Create MovieReview
 	url(r'movie/(?P<pk>\d+)/review/create/$',
 		review,
 		name='review_create'),

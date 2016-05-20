@@ -10,53 +10,76 @@
 			source: categories
 			});
 		});
-			$("#id_movie").autocomplete({
-				source: function( request, response ) {
-				$.ajax({
-					url: "http://api.themoviedb.org/3/search/movie",
-						dataType: "jsonp",
-						data: {
-							featureClass: "P",
-							maxRows: 10,
-							name_startsWith: request.term,
-							username: "demo"
-						},
-						success: function( data ) {
-							response( $.map( data.geonames, function( item ) {
-								return {
-									poster_path: item.name
-									adult: item.name
-									overview: item.name
-									release_date: item.name
-									genre_ids: item.adminName1, item.adminName2, item.adminName3
-									id: item.name
-									original_title: item.name
-									original_languge: item.name
-									language: item.name
-									title: item.name
-									backdrop_path: item.name
-									popularity: item.name
-									vote_count: item.name
-									video: item.name
-									vote_average: item.name
-
-								}
-							}));
-						}
-					});
-				},
-				/* omplir amb la info adient  */
-				minLength: 2,
-				select: function( event, ui ) {
-					if (ui.item) {
-						$("#id_stateOrProvince").val(ui.item.stateOrProvince);
-						$("#id_country").val(ui.item.countryName);
-						$("#id_zipCode").val("");
-					}
-				}
-			});
-		});
-	</script>
+		
+        $("#id_name").autocomplete({
+            source: function( request, response ) {
+                $.ajax({
+                    url: "http://api.themoviedb.org/3/search/movie",
+                    //dataType: "jsonp",
+                    data: {
+                        //featureClass: "P",
+                        //maxRows: 10,
+                        api_key: "fa860240282d5fa0995095476d840b1b",
+                        query: request.term,
+                        page: 5,
+                        include_adult: false,
+                        //username: "demo"
+                    },
+                    success: function( data ) {
+                        response( $.map( data.results, function( item ) {
+                            return {
+                                label: item.title,
+                                value: item.title,
+                                name: item.title,
+                                overview: item.overview,
+                            }
+                        }));
+                    }
+                });
+            },
+            minLength: 2,
+            select: function( event, ui ) {
+                if (ui.item) {
+                    $("#id_name").val(ui.item.name);
+                    $("#id_overview").val(ui.item.overview);
+                }
+            }
+        });
+    });
+    /*
+        $("#id_name").autocomplete({
+            source: function( request, response ) {
+                $.ajax({
+                    url: "http://api.themoviedb.org/3/search/company",
+                    //dataType: "jsonp",
+                    data: {
+                        //featureClass: "P",
+                        //maxRows: 10,
+                        api_key: "fa860240282d5fa0995095476d840b1b",
+                        query: request.term,
+                        page: 5,
+                        //username: "demo"
+                    },
+                    success: function( data ) {
+                        response( $.map( data.results, function( item ) {
+                            return {
+                                label: item.name,
+                                value: item.name,
+                                name: item.name,
+                            }
+                        }));
+                    }
+                });
+            },
+                minLength: 2,
+            select: function( event, ui ) {
+                if (ui.item) {
+                    $("#id_name").val(ui.item.name);
+                }
+            }
+        });
+    });*/
+</script>
 
 
     <form method="post" action="">
