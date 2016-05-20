@@ -34,19 +34,6 @@
 		{% endfor %}
 	</review>
 
-	<h3>Add Review</h3>
-	<form action="{% url 'myapp:review_create' movie.id %}" method="post">
-		{% csrf_token %}
-		Message: <textarea name="comment" id="comment" rows="4"></textarea>
-		<p>Rating:</p>
-		<p>{% for rate in RATING_CHOICES %}
-		<input type="radio" name="rating" id="rating{{ forloop.counter }}" value="{{ rate.1 }}" />
-		<label for="choice{{ forloop.counter }}">{{ rate.1 }} star{{ rate.0|pluralize }}</label>
-		<br/>{% endfor %}
-		</p>
-		<input type="submit" value="Review" />
-	</form>
-
 </p>
 {% endblock %}
 {% block footer %}

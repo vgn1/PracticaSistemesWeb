@@ -9,8 +9,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from models import Director, Movie, Company, Actor,\
 					MovieReview,MovieCategory, Review
 from forms import DirectorForm, CompanyForm, MovieForm, ActorForm
-from views import MovieDetail, MovieList, MovieCreate, MovieDelete, ActorList, ActorDetail, ActorCreate, review,\
-					DirectorList, DirectorDetail, DirectorCreate, CompanyList, CompanyDetail, CompanyCreate,\
+from views import MovieDetail, MovieList, MovieCreate, MovieDelete, MovieEdit, ActorList, ActorDetail, ActorCreate, review,\
+					ActorEdit, ActorDelete, DirectorList, DirectorDetail, DirectorCreate, DirectorEdit, DirectorDelete, \
+					CompanyList, CompanyDetail, CompanyCreate, CompanyEdit, CompanyDelete, \
 					LoginRequiredCheckIsOwnerUpdateView, APIMovieList, APIMovieDetail, APIDirectorList,\
 					APIDirectorDetail, APIActorList, APIActorDetail, APICompanyList, APICompanyDetail,\
 					APIMovieReviewList, APIMovieReviewDetail, APIMovieCategoryList, APIMovieCategoryDetail 
@@ -45,16 +46,15 @@ urlpatterns = [
 
 	#Edit Movie
 	url(r'^movie/(?P<pk>\d+)/edit/$',
-    	LoginRequiredCheckIsOwnerUpdateView.as_view(
-        	model=Movie,
-            form_class=MovieForm),
-        name='movie_edit'),
+    	MovieEdit.as_view(),
+    	name='movie_edit'),
 
 	#Delete Movie
 	url(r'^movie/(?P<pk>\d+)/delete/$',
 		MovieDelete.as_view(),
 		name='movie_delete'),
 
+	##################
 
 	#Actor list
 	url(r'^actor/$',
@@ -77,10 +77,15 @@ urlpatterns = [
 
 	#Edit Actor
 	url(r'^actor/(?P<pk>\d+)/edit/$',
-    	LoginRequiredCheckIsOwnerUpdateView.as_view(
-        	model=Actor,
-            form_class=ActorForm),
-        name='actor_edit'),
+    	ActorEdit.as_view(),
+    	name='actor_edit'),
+
+	#Actor Delete
+	url(r'^actor/(?P<pk>\d+)/delete/$',
+		ActorDelete.as_view(),
+		name='actor_delete'),
+
+ 	#####################
 
 	#Director list
 	url(r'^director/$',
@@ -103,10 +108,15 @@ urlpatterns = [
 
 	#Edit Director
 	url(r'^director/(?P<pk>\d+)/edit/$',
-    	LoginRequiredCheckIsOwnerUpdateView.as_view(
-        	model=Director,
-            form_class=DirectorForm),
-        name='director_edit'),
+    	DirectorEdit.as_view(),
+    	name='director_edit'),
+
+	#Director Delete
+	url(r'^director/(?P<pk>\d+)/delete/$',
+		DirectorDelete.as_view(),
+		name='director_delete'),
+
+	######################
 
 	#Company list
 	url(r'^company/$',
@@ -129,10 +139,15 @@ urlpatterns = [
 
 	#Edit Company
 	url(r'^company/(?P<pk>\d+)/edit/$',
-    	LoginRequiredCheckIsOwnerUpdateView.as_view(
-        	model=Company,
-            form_class=CompanyForm),
-        name='company_edit'),
+    	CompanyEdit.as_view(),
+    	name='company_edit'),
+
+	#Company Delete
+	url(r'^company/(?P<pk>\d+)/delete/$',
+		CompanyDelete.as_view(),
+		name='company_delete'),
+
+	#####################
 
 	#Create MovieReview
 	url(r'movie/(?P<pk>\d+)/review/create/$',

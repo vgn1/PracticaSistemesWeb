@@ -77,21 +77,25 @@ class MovieDetail(DetailView, ConnegResponseMixin):
 class MovieCreate(LoginRequiredMixin, CreateView):
 	model = Movie
 	template_name = 'myapp/form.html'
-	success_url = 'myapp/movie'
+	success_url = '../'
 	form_class = MovieForm
 
 	def form_valid(self, form):
 		form.instance.user = self.request.user
 		return super(MovieCreate, self).form_valid(form)
 
-#class MovieEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
-#	template_name = 'myapp/movie_form.html'
+class MovieEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+	model=Movie
+	form_class=MovieForm
+	template_name = 'myapp/form.html'
+	success_url = '../../'
+	
 
 class MovieDelete(DeleteView):
 	model = Movie
 	template_name = 'myapp/delete_form.html'
-	success_url = '../../../'
-	success_message = 'Movie Removed.'
+	success_url = '../../'
+	
 
 class ActorList(ListView, ConnegResponseMixin):
 	model = Actor
@@ -113,20 +117,24 @@ class ActorCreate(LoginRequiredMixin, CreateView):
 	model = Actor
 	template_name = 'myapp/form.html'
 	form_class = ActorForm
+	success_url = '../'
 
 	def form_valid(self, form):
 		form.instance.user = self.request.user
-		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
+		#form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
 		return super(ActorCreate, self).form_valid(form)
 
-#class ActorEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
-#	template_name = 'myapp/actor_form.html'
+class ActorEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+	model=Actor
+	form_class=ActorForm
+	template_name = 'myapp/form.html'
+	success_url = '../../'
 
-#class ActorDelete(DeleteView):
-#	model = Actor
-#	template_name = 'myapp/delete_form.html'
-#	success_url = '/myapp/actors.html'
-#	success_message = 'Actor Removed.'
+class ActorDelete(DeleteView):
+	model = Actor
+	template_name = 'myapp/delete_form.html'
+	success_url = '../../'
+
 
 class CompanyList(ListView, ConnegResponseMixin):
 	model = Company
@@ -142,20 +150,23 @@ class CompanyCreate(LoginRequiredMixin, CreateView):
 	model = Company
 	template_name = 'myapp/form.html'
 	form_class = CompanyForm
+	success_url = '../'
 
 	def form_valid(self, form):
 		form.instance.user = self.request.user
-		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
+		#form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
 		return super(CompanyCreate, self).form_valid(form)
 
-#class CompanyEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
-#	template_name = 'myapp/company_form.html'
+class CompanyEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+	model=Company
+	form_class=CompanyForm
+	template_name = 'myapp/form.html'
+	success_url = '../../'
 
-#class CompanyDelete(DeleteView):
-#	model = Company
-#	template_name = 'myapp/delete_form.html'
-#	success_url = '/myapp/companies.html'
-#	success_message = 'Company Removed.'
+class CompanyDelete(DeleteView):
+	model = Company
+	template_name = 'myapp/delete_form.html'
+	success_url = '../../'
 
 class DirectorList(ListView, ConnegResponseMixin):
 	model = Director
@@ -166,16 +177,30 @@ class DirectorDetail(DetailView, ConnegResponseMixin):
 	model = Director
 	template_name = 'myapp/director_detail.html'
 
-
 class DirectorCreate(LoginRequiredMixin, CreateView):
 	model = Director
 	template_name = 'myapp/form.html'
 	form_class = Director
+	success_url = '../'
 
 	def form_valid(self, form):
 		form.instance.user = self.request.user
-		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
+		#form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
 		return super(DirectorCreate, self).form_valid(form)
+
+class DirectorEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+	model=Director
+	form_class=DirectorForm
+	template_name = 'myapp/form.html'
+	success_url = '../../'
+
+class DirectorDelete(DeleteView):
+	model = Director
+	template_name = 'myapp/delete_form.html'
+	success_url = '../../'
+
+
+
 
 """class MovieReviewCreate(LoginRequiredMixin, CreateView):
 	model = MovieReview
@@ -186,8 +211,6 @@ class DirectorCreate(LoginRequiredMixin, CreateView):
 		form.instance.user = self.request.user
 		form.instance.movie = Movie.objects.get(id=self.kwargs['pk'])
 		return super(MovieReviewCreate, self).form_valid(form)"""
-#class DirectorEdit(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
-#	template_name = 'myapp/director_form.html'
 
 #class DirectorDelete(DeleteView):
 #	model = Director
