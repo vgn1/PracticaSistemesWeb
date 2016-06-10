@@ -6,10 +6,10 @@
 <p>
 	<birthday> Birthday: {{ director.birthday }} </birthday>
 	<biography> Overview: {{ director.biography }} </biography>
-	<movies>
+	<movies> 
 		{% for movie in director.movies.all %}
-			<li><a href="{% url 'myapp:MovieDetail' movie.id 'html' %}">
-				{{ movie.name }}</a></li>
+			<a href="{% url 'myapp:movie_detail' movie.id 'html' %}">
+				{{ movie.name }}</a>s
 		{% endfor %}
 	</movies>
 </p>

@@ -166,7 +166,7 @@ urlpatterns = [
         APIMovieDetail.as_view(), name='movie-detail'),
 
     url(r'^api/director/$',
-        APIDirectorList.as_view(), name='director-list'),
+        APIDirectorList.as_view(), name='myapp/director-list'),
     url(r'^api/director/(?P<pk>\d+)/$',
         APIDirectorDetail.as_view(), name='director-detail'),
 

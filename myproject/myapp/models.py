@@ -42,10 +42,11 @@ class Category(models.Model):
 	user = models.ForeignKey(User, default=1)
 
 class Review(models.Model):
-	RATING_CHOICES = ((0, 'Undefined'), (1, 'one'), (2, 'two'), (3, 'three'), (4, 'four'), (5, 'five'))
+	RATING_CHOICES = ((0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5))
 	rating = models.PositiveSmallIntegerField('Rating (stars)', blank=False, default=0, choices=RATING_CHOICES)
 	comment = models.TextField(blank=True, null=True)
 	user = models.ForeignKey(User, default=1)
+
 
 class Movie(models.Model):
 	name = models.TextField()
@@ -66,3 +67,5 @@ class MovieReview(Review):
 
 class MovieCategory(Category):
 	movie = models.ForeignKey(Movie, related_name="cat")
+
+

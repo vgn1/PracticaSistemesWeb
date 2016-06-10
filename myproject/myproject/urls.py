@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.contrib.auth.views import login, logout
 
 urlpatterns = [
-    url(r'^$', include('myapp.urls', namespace='myapp')),
+   # url(r'^$', include('myapp.urls', namespace='myapp')),
 	url(r'^admin/', include(admin.site.urls)),
     url(r'^myapp/', include('myapp.urls', namespace='myapp')),
     #url(r'^myproject/', include('myapp.urls', namespace='myproject')),

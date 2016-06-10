@@ -6,5 +6,11 @@
 <p>
 	<birthday> Birthday: {{ actor.birthday }} </birthday>
 	<biography> Overview: {{ actor.biography }} </biography>
+	<movie> 
+		{% for movie in actor.movies.all %}
+			<a class="movie" href="{% url 'movie:movie_detail' movie.id 'html' %}">
+				{{ movie.name }}</a>
+		{% endfor %}
+	</movie>
 </p>
 {% endblock %}
